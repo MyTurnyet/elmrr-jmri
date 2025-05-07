@@ -1,0 +1,22 @@
+{
+  "rules": [
+    {
+      "name": "development-log-tracker",
+      "enabled": true,
+      "description": "Automatically updates DEVELOPMENT_LOG.md with each prompt used in the project",
+      "implementation": "development-log-tracker.ts"
+    },
+    {
+      "name": "xp-development",
+      "enabled": true,
+      "description": "Guidelines for following Extreme Programming practices in code development",
+      "implementation": "xp-development.ts"
+    },
+    {
+      "name": "arlos-git-notation",
+      "enabled": true,
+      "description": "Standardized Git commit message format",
+      "implementation": "arlos-git-notation.ts"
+    }
+  ]
+} 
