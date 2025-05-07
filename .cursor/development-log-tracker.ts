@@ -1,6 +1,7 @@
 // Development Log Tracker Implementation
 import { promises as fs, existsSync } from 'fs';
 import path from 'path';
+import { exec } from 'child_process';
 
 // Define the context interface
 interface PromptContext {
@@ -16,10 +17,14 @@ interface RuleRegistry {
 // Main function that will be called on each prompt
 export async function onPrompt(context: PromptContext): Promise<void> {
   try {
-    // Get current date and time
-    const now = new Date();
-    const date = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', timeZoneName: 'short' });
+    // Get current date and time with fixed timezone to PDT/PST
+    const { stdout: dateOutput } = await execCommand('date');
+    const systemDate = new Date(dateOutput.trim());
+    
+    // Format the date and time
+    const date = systemDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const timeOptions: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const time = systemDate.toLocaleTimeString('en-US', timeOptions) + " PDT";
     
     // Get user prompt
     const prompt = context.prompt.trim();
@@ -73,6 +78,19 @@ ${context.response || 'Processing this prompt...'}
   } catch (error) {
     console.error('Error updating development log:', error);
   }
+}
+
+// Helper function to execute shell commands
+async function execCommand(command: string): Promise<{ stdout: string; stderr: string }> {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve({ stdout, stderr });
+    });
+  });
 }
 
 // Create a meaningful title from the prompt
