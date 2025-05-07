@@ -1,5 +1,7 @@
 # JMRI Docker Container
 
+[![Run Jest Tests](https://github.com/MyTurnyet/elmrr-jmri/actions/workflows/jest-tests.yml/badge.svg)](https://github.com/MyTurnyet/elmrr-jmri/actions/workflows/jest-tests.yml)
+
 This project provides Docker configuration to run JMRI (Java Model Railroad Interface) in a container.
 
 ## What is JMRI?
