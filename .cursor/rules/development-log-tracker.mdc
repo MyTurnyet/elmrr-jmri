@@ -1,0 +1,53 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+@rule
+name: Development Log Tracker
+description: Automatically updates DEVELOPMENT_LOG.md with each prompt used in the project
+version: 1.0.0
+continueOnError: true
+
+This rule will track all user prompts in the DEVELOPMENT_LOG.md file.
+
+## Instructions
+1. Whenever a new prompt is received, append it to the DEVELOPMENT_LOG.md file
+2. Include timestamp, prompt content, and a brief description of the outcome
+3. Organize prompts chronologically
+4. Update the Table of Contents if necessary
+
+## Implementation
+When a new prompt arrives:
+1. Get the current date and time
+2. Check if the prompt is related to an existing section or requires a new section
+3. Format the entry with appropriate markdown syntax:
+   ```
+   ### N. Brief Title of Prompt
+   **Date:** [Current Date]  
+   **Time:** [Current Time]  
+   **Prompt:**
+   ```
+   [Actual prompt content]
+   ```
+   
+   Brief description of what was accomplished
+   ```
+4. Append this entry to the appropriate section in DEVELOPMENT_LOG.md
+5. If creating a new section, update the Table of Contents
+
+## Example Entry
+```markdown
+### 6. Adding Cursor Rule for Log Tracking
+**Date:** June 26, 2023  
+**Time:** 16:00 PST  
+**Prompt:**
+```
+add a cursor rule that always runs in this code project and updates this file with every new prompt.
+```
+
+Created a Cursor rule that automatically updates the development log with each new prompt, including timestamps and descriptions.
+```
+
+## Note
+This rule should be triggered for every user prompt, ensuring a complete record of the development process. 

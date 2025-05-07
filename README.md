@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JMRI Docker Container
 
-## Getting Started
+This project provides Docker configuration to run JMRI (Java Model Railroad Interface) in a container.
 
-First, run the development server:
+## What is JMRI?
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+JMRI (Java Model Railroad Interface) is open-source software for model railroad computer control. It includes tools like DecoderPro for programming DCC decoders, PanelPro for creating control panels, and more. For details, visit [JMRI.org](https://www.jmri.org/).
+
+## Prerequisites
+
+- Docker and Docker Compose installed on your system
+- Basic understanding of Docker concepts
+- Network-based connection to your model railroad (like DCC-EX, LocoNet over TCP, etc.)
+
+## Quick Start
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/jmri-docker.git
+   cd jmri-docker
+   ```
+
+2. Build and start the container:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Access JMRI web interface at: http://localhost:3081
+
+4. If you use WiThrottle-compatible apps (like Engine Driver), connect to host IP on port 12090
+
+## WebSocket Client Utility
+
+This project includes a TypeScript WebSocketClient utility that can connect to the JMRI WebSocket server running on port 12090. This allows your web application to communicate with JMRI.
+
+### Features
+
+- Easy connection to the JMRI WebSocket server
+- Automatic reconnection with exponential backoff
+- Event-based API for handling messages, connections, and errors
+- JSON parsing of messages
+
+### Usage
+
+```typescript
+import { WebSocketClient } from '@/utils/websocket/WebSocketClient';
+
+// Create a client that connects to localhost:12090
+const client = new WebSocketClient('localhost', 12090);
+
+// Set up event handlers and connect
+client.onMessage((data) => console.log('Received:', data));
+client.connect().then(() => console.log('Connected'));
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+For more details, see the [WebSocketClient documentation](src/utils/websocket/README.md) and [example usage](src/utils/websocket/examples/basic-usage.ts).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+By default, this setup runs JMRI in headless mode using `JmriFaceless`. JMRI data is persisted in the `./jmri-data` directory on your host.
 
-## Learn More
+### Running Different JMRI Applications
 
-To learn more about Next.js, take a look at the following resources:
+You can run different JMRI applications by changing the `command` in docker-compose.yml:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **JmriFaceless** (default): Headless mode for server operation
+- **DecoderPro**: For programming decoders (requires X11 forwarding for GUI)
+- **PanelPro**: For building control panels (requires X11 forwarding for GUI)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Hardware Connections
 
-## Deploy on Vercel
+This Docker setup is optimized for network-based connections to your layout:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Use DCC command stations with network interfaces
+- Use IP-based serial port servers for USB/serial devices
+- For direct USB connections, uncomment `network_mode: "host"` in docker-compose.yml and see USB Access section below
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## USB/Serial Access
+
+To access USB or serial devices directly:
+
+1. Uncomment `network_mode: "host"` in docker-compose.yml
+2. Make sure your user has permissions to access the devices
+3. Restart the container
+
+For more advanced USB device mapping, see Docker documentation on device mapping.
+
+## X11 Forwarding (For GUI Applications)
+
+To run GUI applications like DecoderPro or PanelPro:
+
+### On Linux:
+
+```bash
+# Allow X server connections
+xhost +local:docker
+
+# Run with X11 socket mounted
+docker-compose -f docker-compose.yml -f docker-compose.x11.yml up
+```
+
+See the docker-compose.x11.yml file for details.
+
+## Updating JMRI Version
+
+To update the JMRI version:
+
+1. Edit the Dockerfile and change `ENV JMRI_VERSION="5.10"` to the desired version
+2. Rebuild the container:
+   ```bash
+   docker-compose build --no-cache
+   docker-compose up -d
+   ```
+
+## Troubleshooting
+
+### Container Fails to Start
+
+Check logs with:
+```bash
+docker-compose logs
+```
+
+### Network Connection Issues
+
+If you can't connect to network-based hardware:
+- Try using host networking mode by uncommenting `network_mode: "host"` in docker-compose.yml
+- Verify that ports are properly exposed and not blocked by firewalls
+
+## License
+
+This Docker configuration is provided under MIT license. JMRI itself is covered by the GNU General Public License v2.

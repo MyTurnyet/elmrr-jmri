@@ -1,0 +1,59 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+@rule
+name: XP Development Practices
+description: Guidelines for following Extreme Programming practices in code development
+
+### Test-Driven Development
+- Write automated tests before implementing functionality
+- Keep tests simple, focused, and readable
+- Ensure all code has corresponding tests
+- Maintain high test coverage
+- Follow the Red-Green-Refactor cycle
+
+### Simple Design
+- Implement the simplest solution that works
+- Avoid overengineering and premature optimization
+- Follow YAGNI principle (You Aren't Gonna Need It)
+- Keep code DRY (Don't Repeat Yourself) but without overabstracting
+- Use descriptive naming for variables, functions, and classes
+
+### Refactoring
+- Continuously improve code design without changing behavior
+- Refactor before adding new features to existing code
+- Use small, incremental steps when refactoring
+- Always maintain working tests during refactoring
+
+### Pair Programming
+- Write code collaboratively when appropriate
+- Share knowledge across the team
+- Review code early and often
+- Take turns as driver and navigator
+
+### Continuous Integration
+- Integrate code frequently into the main branch
+- Keep build and test cycles fast
+- Fix broken builds immediately
+- Automate integration and deployment processes
+
+### Collective Code Ownership
+- Anyone can modify any part of the codebase
+- Follow consistent coding standards across the project
+- Document architectural decisions and non-obvious solutions
+- Write self-documenting code when possible
+
+### Small Releases
+- Release small, incremental changes
+- Prioritize business value in feature implementation
+- Build vertical slices rather than horizontal layers
+- Get early feedback from users
+
+### Sustainable Pace
+- Maintain consistent productivity
+- Avoid technical debt that slows future development
+- Document complex decisions and trade-offs
+
+When suggesting or implementing code, follow these principles and help the developer maintain XP practices.
