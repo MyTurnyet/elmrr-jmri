@@ -10,6 +10,7 @@ A simple WebSocket client implementation that connects to a specified WebSocket 
 - JSON parsing of messages
 - Promise-based connection API
 - Type-safe implementation with TypeScript
+- Interface-based design for easy testing and implementation swapping
 
 ## Installation
 
@@ -19,9 +20,10 @@ This class is included as part of the project. No additional installation is nee
 
 ```typescript
 import { WebSocketClient } from '@/utils/websocket/WebSocketClient';
+import { WebSocketInterface } from '@/utils/websocket/WebSocketInterface';
 
 // Create a client that connects to localhost:12090
-const client = new WebSocketClient('localhost', 12090);
+const client: WebSocketInterface = new WebSocketClient('localhost', 12090);
 
 // Set up event handlers
 client.onMessage((data) => {
@@ -57,6 +59,23 @@ client.disconnect();
 ```
 
 ## API
+
+### Interface
+
+The `WebSocketInterface` defines the contract for WebSocket client implementations:
+
+```typescript
+interface WebSocketInterface {
+  connect(): Promise<void>;
+  disconnect(): void;
+  send(data: unknown): boolean;
+  onMessage(callback: (data: unknown) => void): void;
+  onConnect(callback: () => void): void;
+  onDisconnect(callback: () => void): void;
+  onError(callback: (error: Event) => void): void;
+  isActive(): boolean;
+}
+```
 
 ### Constructor
 

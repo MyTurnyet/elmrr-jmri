@@ -1,7 +1,9 @@
 /**
  * A simple WebSocket client that connects to a specified port
  */
-export class WebSocketClient {
+import { WebSocketInterface } from './WebSocketInterface';
+
+export class WebSocketClient implements WebSocketInterface {
   private socket: WebSocket | null = null;
   private url: string;
   private isConnected: boolean = false;
